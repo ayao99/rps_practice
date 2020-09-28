@@ -1,74 +1,100 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Rock Paper Scissors</title>
-    </head>
 
-    <body>
-        <h1>Rock, Paper, Scissors!</h1>
-        <h4>This game is played completely in the console</h4>
-        <h4>Mac: Press (Cmd + option + I) and enter 'game()' to begin</h4>
-        <h4>Windows: Press (Ctrl + Shift + I) and enter 'game()' to begin</h4>
+<head>
+    <link type="text/css" rel="stylesheet" href="rps.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <title>Rock Paper Scissors</title>
+</head>
 
-        <script>
-            let playerScore = 0;
-            let computerScore = 0;
-            let options = ['rock', 'paper', 'scissors'];
+<body>
+    <h1>Rock, Paper, Scissors!</h1>
 
-            function computerPlay() {
-                return options[Math.floor(Math.random() * (2 + 1))];
+    <div id='scores'>
+        <h2 id='pScore'>Player Score: 0</h2>
+        <h2 id='cScore'>Computer Score: 0</h2>
+    </div>
+
+    <h2 id='matchinfo'>Click one of the three buttons!</h2>
+
+    <div class='container'>
+        <button id='rock'><img id='rock'
+                src='https://lh3.googleusercontent.com/proxy/8dYRnchYZ6O0VltwaW0V83SHunfxkYRlapGwjnxNIKfe7yeMQ8VXHkPmqALqOI-kZnGRjSV6kmIArLCCArj4mrv7svhvzHLb5LsRRBt55S4NZn6apDqFOjVer_lo0X6l4PYFS2rsTeWmHIg8T7JNYXDKHeXnM8SouuQ'></button>
+        <button id='paper'><img id='paper'
+                src='https://www3.bostonglobe.com//rw/Boston/2011-2020/WebGraphics/Metro/BostonGlobe.com/2018/05/rockpaperscissors/assets/paper--left.png'></button>
+        <button id='scissors'><img id='scissors'
+                src='https://www3.bostonglobe.com//rw/Boston/2011-2020/WebGraphics/Metro/BostonGlobe.com/2018/05/rockpaperscissors/assets/scissors--left.png'></button>
+    </div>
+
+    <script>
+        let playerScore = 0;
+        let computerScore = 0;
+        let playerSelection = '';
+        const options = ['rock', 'paper', 'scissors'];
+        const buttons = document.querySelectorAll('button');
+
+        buttons.forEach((button) => {
+            button.addEventListener('click', function () {
+                playerSelection = this.id;
+                game();
+            });
+        });
+
+        function computerPlay() {
+            return options[Math.floor(Math.random() * (2 + 1))];
+        }
+
+        function playerPlay() {
+            return playerSelection;
+        }
+
+        function playRound(playerSelection, computerSelection) {
+            if (playerSelection === 'rock' && computerSelection === 'scissors') {
+                playerScore++;
+                document.getElementById('matchinfo').textContent = 'You win! Rock beats scissors.';
+            } else if (playerSelection === 'rock' && computerSelection === 'paper') {
+                computerScore++;
+                document.getElementById('matchinfo').textContent = 'You lose :( Paper beats rock.';
+            } else if (playerSelection === 'paper' && computerSelection === 'rock') {
+                playerScore++;
+                document.getElementById('matchinfo').textContent = 'You win! Paper beats rock.';
+            } else if (playerSelection === 'paper' && computerSelection === 'scissors') {
+                computerScore++;
+                document.getElementById('matchinfo').textContent = 'You lose :( Scissors beats paper';
+            } else if (playerSelection === 'scissors' && computerSelection === 'rock') {
+                computerScore++;
+                document.getElementById('matchinfo').textContent = 'You lose :( Rock beats scissors.';
+            } else if (playerSelection === 'scissors' && computerSelection === 'paper') {
+                playerScore++;
+                document.getElementById('matchinfo').textContent = 'You win! Scissors beats paper.';
+            } else if (playerSelection === computerSelection) {
+                document.getElementById('matchinfo').textContent = `Tie! You both have chosen ${playerSelection}`;
             }
+            document.getElementById('pScore').textContent = `Player Score: ${playerScore}`;
+            document.getElementById('cScore').textContent = `Computer Score: ${computerScore}`;
+        }
 
-            function playerPlay() {
-                let ans = prompt('Please choose rock, paper, or scissors:').toLowerCase();
-                if (!options.includes(ans)) {
-                    console.log('You\'ve entered an invalid response');
-                    playerPlay();
-                } else {
-                    return ans;
+        function checkend() {
+            if (playerScore === 5 || computerScore === 5) {
+                if (playerScore < computerScore) {
+                    alert('You\'ve lost to a computer. Wah :(');
+                } else if (computerScore < playerScore) {
+                    alert('You\'ve won! Just against a computer though so...');
                 }
-            }
-            
-            function playRound(playerSelection, computerSelection) {
-                if (playerSelection === 'rock' && computerSelection === 'scissors') {
-                    playerScore++;
-                    return 'You win! Rock beats scissors.';
-                } else if (playerSelection === 'rock' && computerSelection === 'paper') {
-                    computerScore++;
-                    return 'You lose :( Paper beats rock.';
-                } else if (playerSelection === 'paper' && computerSelection === 'rock') {
-                    playerScore++;
-                    return 'You win! Paper beats rock.';
-                } else if (playerSelection === 'paper' && computerSelection === 'scissors') {
-                    computerScore++;
-                    return 'You lose :( Scissors beats paper';
-                } else if (playerSelection === 'scissors' && computerSelection === 'rock') {
-                    computerScore++;
-                    return 'You lose :( Rock beats scissors.';
-                } else if (playerSelection === 'scissors' && computerSelection === 'paper') {
-                    playerScore++;
-                    return 'You win! Scissors beats paper.';
-                } else if (playerSelection === computerSelection) {
-                    return 'Tie! You both have chosen ' + playerSelection + '.';
-                }
-            }
-
-            function game() {
                 playerScore = 0;
                 computerScore = 0;
-                for (i = 1; i <= 5; i++) {
-                    console.log(playRound(playerPlay(), computerPlay()));
-                    console.log('Player: ' + playerScore + '  Computer: ' + computerScore);
-                }
-
-                if (playerScore < computerScore) {
-                    return 'You\'ve lost to a computer. Wah :(';
-                } else if (playerScore > computerScore) {
-                    return 'You\'ve won! Just against a computer though so...'
-                } else {
-                    return 'You\'ve tied against RNG, so maybe you really lost.'
-                }
+                //showing the reset after it happens
+                document.getElementById('pScore').textContent = `Player Score: ${playerScore}`;
+                document.getElementById('cScore').textContent = `Computer Score: ${computerScore}`;
+                document.getElementById('matchinfo').textContent = 'Click one of the three buttons!';
             }
-        </script>
-    </body>
+        }
+
+        function game() {
+            playRound(playerPlay(), computerPlay());
+            checkend();
+        }
+    </script>
+</body>
+
 </html>
